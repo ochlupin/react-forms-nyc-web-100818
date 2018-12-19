@@ -30,7 +30,7 @@ class Form extends Component {
   state = {
     firstName: "John",
     lastName: "Henry"
-  }
+  };
 
   render() {
     return (
@@ -38,7 +38,7 @@ class Form extends Component {
         <input type="text" name="firstName" value={this.state.firstName} />
         <input type="text" name="lastName" value={this.state.lastName} />
       </form>
-    )
+    );
   }
 }
 ```
@@ -58,7 +58,7 @@ without rewriting all their profile info.
 
 In a React app, all the user info displayed on a user profile would already be
 stored in state somewhere on the application. Its already being displayed after
-all.  By setting the value of inputs based on state as we did above, we can
+all. By setting the value of inputs based on state as we did above, we can
 bring in existing state or props and populate a form dynamically.
 
 There is a problem, though. The set up we've created is only half finished.
@@ -93,14 +93,14 @@ what these functions look like:
 handleFirstNameChange = event => {
   this.setState({
     firstName: event.target.value
-  })
-}
+  });
+};
 
 handleLastNameChange = event => {
   this.setState({
     lastName: event.target.value
-  })
-}
+  });
+};
 ```
 
 The `event` contains data about the `target`, which is whatever the `event` was
@@ -153,18 +153,18 @@ differences are subtle, but it's important to recognize them — and use them
 accordingly (spoiler: most of the time, we'll use _controlled_ components).
 
 The quickest way to check if a component is controlled or uncontrolled is to
-check for `value` or `defaultValue`. If the component has a `value` prop, it is
-controlled (the state of the component is being controlled by React). If it
-doesn't have a `value` prop, it's an uncontrolled component. Uncontrolled
-components can optionally have a `defaultValue` prop to set its initial value.
-These two props (`value` and `defaultValue`) are _mutually exclusive_: a
-component is either controlled or uncontrolled, but it cannot be both.
+check for `value` or `defaultValue`. **If the component has a `value` prop, it is
+controlled (the state of the component is being controlled by React)**. **If it
+doesn't have a `value` prop, it's an uncontrolled component**. **Uncontrolled
+components can optionally have a `defaultValue` prop to set its initial value**.
+**These two props (`value` and `defaultValue`) are _mutually exclusive_: a
+component is either controlled or uncontrolled, but it cannot be both.**
 
 #### Uncontrolled Components
 
-In uncontrolled components, the state of the component's value is kept in the
+**In uncontrolled components, the state of the component's value is kept in the
 DOM itself like a regular old HTML form— in other words, the form element in
-question (e.g. an `<input>`) has its _own internal state_. To retrieve that
+question (e.g. an `<input>`) has its _own internal state_**. To retrieve that
 value, we would need direct access to the DOM component that holds the value,
 _or_ we'd have to add an `onChange` handler.
 
@@ -176,46 +176,44 @@ rendering the same thing). Uncontrolled forms still work just fine in React.
 To submit a form, we can use the `onSubmit` handler on the `form` element itself:
 
 ```js
-<form onSubmit={ event => this.handleSubmit(event) }>
-  ...
-</form>
+<form onSubmit={event => this.handleSubmit(event)}>...</form>
 ```
 
-All the form data in an uncontrolled form is accessible within the `event`, but
-accessing _can_ sometimes be a pain, as you end up writing things like
+**All the form data in an uncontrolled form is accessible within the `event`**, **but
+accessing _can_ sometimes be a pain**, as you end up writing things like
 `event.target.children[0].value` to get the value of our first input.
 
 ```js
 handleSubmit = event => {
-  event.preventDefault()
-  const firstName = event.target.children[0].value
-  const lasstName = event.target.children[1].value
-  this.sendFormDataSomewhere({ firstName, lastName })
-}
+  event.preventDefault();
+  const firstName = event.target.children[0].value;
+  const lasstName = event.target.children[1].value;
+  this.sendFormDataSomewhere({ firstName, lastName });
+};
 ```
 
 On a larger form this can turn into some dense code.
 
 #### Controlled component
 
-In controlled components, we explicitly set the value of a component, and update
-that value in response to any changes the user makes. Just to review, lets look
+**In controlled components, we explicitly set the value of a component, and update
+that value in response to any changes the user makes**. Just to review, lets look
 at some code to make things clearer:
 
 ```js
 // src/components/ControlledInput.js
-import React from 'react';
+import React from "react";
 
 class ControlledInput extends React.Component {
   state = {
-    value: '',
-  }
+    value: ""
+  };
 
   handleChange = event => {
     this.setState({
-      value: event.target.value,
+      value: event.target.value
     });
-  }
+  };
 
   render() {
     return (
@@ -231,35 +229,30 @@ class ControlledInput extends React.Component {
 }
 
 export default ControlledInput;
-
 ```
 
 ```js
 // src/index.js
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 
-import ControlledInput from './components/ControlledInput';
+import ControlledInput from "./components/ControlledInput";
 
-ReactDOM.render(
-  <ControlledInput />,
-  document.getElementById('root')
-);
+ReactDOM.render(<ControlledInput />, document.getElementById("root"));
 ```
 
-As you can see, we can easily define the initial value by setting the  `value`
+As you can see, we can easily define the initial value by setting the `value`
 property on the state to whatever we want. When you enter something into the
 `input`, the value is captured and set as the new state.
 
 Doing something with a submitted form also ends up cleaner:
 
-
 ```js
 handleSubmit = event => {
-  event.preventDefault()
-  this.sendFormDataSomewhere(this.state)
-}
+  event.preventDefault();
+  this.sendFormDataSomewhere(this.state);
+};
 ```
 
 In this case, our entire state object is just the controlled form data, so we
@@ -306,14 +299,14 @@ class that seem very very similar:
 handleFirstNameChange = event => {
   this.setState({
     firstName: event.target.value
-  })
-}
+  });
+};
 
 handleLastNameChange = event => {
   this.setState({
     lastName: event.target.value
-  })
-}
+  });
+};
 ```
 
 Since each one is changing a different value in our state, we've got them
@@ -337,8 +330,8 @@ state, we can write a generic `handleChange` method like so:
 handleChange = event => {
   this.setState({
     [event.target.name]: event.target.value
-  })
-}
+  });
+};
 ```
 
 If we connect this method to both of our `input`s, they will both correctly
